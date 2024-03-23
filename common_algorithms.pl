@@ -23,6 +23,8 @@ dfs(I,F,Path) :-
     \+ belongs(State,CurrentPath),
     back_dfs(I, [State,LastState|CurrentPath], Path).
 
+
+
 % (2)
 % Breadth-First Search
 
@@ -50,3 +52,28 @@ use_bfs([Path|OtherPaths],Ans) :-
 bfs(N,Path) :-
   use_bfs([[N]],Path).
   
+
+
+% (3)
+% Quick-Sort (first element as pivot)
+
+% partition(-Pivot,-List_without_pivot,+Left_partition,+Right_partition).
+partition(_,[],[],[]).
+partition(Pivot,[X|Xs],[X|Left],Right) :-
+  X =< Pivot,
+  partition(Pivot,Xs,Left,Right).
+partition(Pivot,[X|Xs],Left,[X|Right]) :-
+  X > Pivot,
+  partition(Pivot,Xs,Left,Right).
+
+% concat(-List1,-List2,+New_list).
+concat([],L,L).
+concat([X|Xs],L,List) :- concat(Xs,L,[X|L]).
+
+% quicksort(-List,+Sorted_list).
+quicksort([],[]).
+quicksort([Pivot|Rest],Sorted) :-
+  partition(Pivot,Rest,Left,Right),
+  quicksort(Right,RightSorted),
+  quicksort(Left,LeftSorted),
+  concat(LeftSorted,[Pivot|RightSorted],Sorted).
