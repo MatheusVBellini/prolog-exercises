@@ -28,12 +28,12 @@ dfs(I,F,Path) :-
 % (2)
 % Breadth-First Search
 
-% concat(List1,List2,Result_list).
+% concat(-List1,-List2,+Result_list).
 concat([],L,L).
 concat([X|Xs],L,[X|Ys]) :-
   concat(Xs,L,Ys).
 
-% extend(Current_path, Extended_path).
+% extend(-Current_path, +Extended_path).
 extend([N|P],Ps) :-
   findall(
     [nN,N|P], 
@@ -65,10 +65,6 @@ partition(Pivot,[X|Xs],[X|Left],Right) :-
 partition(Pivot,[X|Xs],Left,[X|Right]) :-
   X > Pivot,
   partition(Pivot,Xs,Left,Right).
-
-% concat(-List1,-List2,+New_list).
-concat([],L,L).
-concat([X|Xs],L,List) :- concat(Xs,L,[X|L]).
 
 % quicksort(-List,+Sorted_list).
 quicksort([],[]).
