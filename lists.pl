@@ -31,11 +31,11 @@ size([_|T],X) :-
 
 % (5)
 % Reverse a list
-% reverse(-List,?Reversed_list).
-reverse([],[]).
-reverse([H|[]],[H|[]]).
-reverse([H|T],[HR|_]) :- 
-  reverse(T,[H,HR|_]).
+% reverse_list(-List,?Reversed_list).
+reverse_list([],[]).
+reverse_list([Head|Tail],ReversedList) :-
+  reverse_list(Tail,ReversedTail),
+  append(ReversedTail,[Head],ReversedList).
 
 % (6)
 % Verify if a list is palindrome
