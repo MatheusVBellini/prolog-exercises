@@ -1,12 +1,5 @@
 /* Prolog Implementation of Common Algorithms */
 
-% test graph
-connected(a,b). connected(b,d).
-connected(d,i). connected(a,c).
-connected(c,e). connected(e,g).
-connected(e,h). connected(c,f).
-end(i). end(f).
-
 % (1)
 % Depth-First Search
 
@@ -73,3 +66,33 @@ quicksort([Pivot|Rest],Sorted) :-
   quicksort(Right,RightSorted),
   quicksort(Left,LeftSorted),
   concat(LeftSorted,[Pivot|RightSorted],Sorted).
+
+
+
+% (4)
+% Merge-Sort
+
+% split(-List,+First,+Second).
+split([],[],[]).
+split([X],[X],[]).
+split([HeadFirst,HeadSecond|Tail],[HeadFirst|First],[HeadSecond|Second]) :-
+  split(Tail,First,Second).
+
+% ordered_assemble(-First,-Second,+OrderedList)
+ordered_assemble(L,[],L).
+ordered_assemble([],L,L).
+ordered_assemble([Head1|Tail1],[Head2|Tail2],[Head1|OrderedList]) :-
+  Head1 =< Head2,
+  ordered_assemble(Tail1,[Head2|Tail2],OrderedList).
+ordered_assemble([Head1|Tail1],[Head2|Tail2],[Head2|OrderedList]) :-
+  Head1 > Head2,
+  ordered_assemble([Head1|Tail1],Tail2,OrderedList).
+
+% mergesort(-List,+SortedList).
+mergesort([],[]) :- !.
+mergesort([X],[X]) :- !.
+mergesort(List,SortedList) :-
+  split(List,First,Second),
+  mergesort(First,SortedFirst),
+  mergesort(Second,SortedSecond),
+  ordered_assemble(SortedFirst,SortedSecond,SortedList).
