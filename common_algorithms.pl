@@ -7,14 +7,14 @@
 belongs(N,[N|_]) :- !.
 belongs(N,[_|T]) :- belongs(N,T).
 
-% dfs(-Initial_node, -Final_node, +Path).
+% dfs(-InitialNode,-FinalNode,+Path).
 dfs(I,F,Path) :-
-  back_dfs(I,[F],Path).
-  back_dfs(I,[I|CompletePath],[I|CompletePath]).
-  back_dfs(I,[LastState|CurrentPath],Path) :-
-    connected(State,LastState),
-    \+ belongs(State,CurrentPath),
-    back_dfs(I, [State,LastState|CurrentPath], Path).
+  use_dfs(I,[F],Path).
+  use_dfs(I,[I|CompletePath],[I|CompletePath]).
+  use_dfs(I,[N|CurrentPath],Path) :-
+    connected(NewN,N),
+    \+ belongs(NewN,CurrentPath),
+    use_dfs(I,[NewN,N|CurrentPath],Path).
 
 
 
@@ -26,24 +26,20 @@ concat([],L,L).
 concat([X|Xs],L,[X|Ys]) :-
   concat(Xs,L,Ys).
 
-% extend(-Current_path, +Extended_path).
-extend([N|P],Ps) :-
-  findall(
-    [nN,N|P], 
-    (connected(N,nN),\+ belongs(nN,[N|P])),
-    Ps
-  ).
+% extend(-Current_path,+Extended_path).
+extend([N|Path],ExtendedPaths) :-
+  findall([Ns,N|Path], connected(N,Ns), ExtendedPaths).
 
-% use_bfs(-List_of_paths, +Path).
-use_bfs([[N|Path]|_],[N|Path]) :- end(N).
-use_bfs([Path|OtherPaths],Ans) :-
-  extend(Path,NewPaths),
-  concat(OtherPaths,NewPaths,ConcatPaths),
-  use_bfs(ConcatPaths,Ans).
+% use_bfs(-Final_node,-List_of_paths,+Path).
+use_bfs(F,[[F|CompletePath]|_],[F|CompletePath]).
+use_bfs(F,[CurrPath|OtherPaths],Path) :-
+  extend(CurrPath,ExtendedPaths),
+  concat(OtherPaths,ExtendedPaths,NewList),
+  use_bfs(F,NewList,Path).
 
-% bfs(-Node,+Path)
-bfs(N,Path) :-
-  use_bfs([[N]],Path).
+% bfs(-Initial_node,-Final_node,+Path).
+bfs(I,F,Path) :-
+  use_bfs(F,[[I]],Path).
   
 
 
